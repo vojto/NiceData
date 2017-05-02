@@ -13,7 +13,7 @@ import ReactiveSwift
 
 public typealias CDCallback = (([NSManagedObject]) -> ())
 
-public class ReactiveObserver<T: NSManagedObject>: CDObserver {
+open class ReactiveObserver<T: NSManagedObject>: CDObserver {
     public var objects = MutableProperty<[T]>([])
     
     override public func fetch() {
@@ -23,7 +23,7 @@ public class ReactiveObserver<T: NSManagedObject>: CDObserver {
     }
 }
 
-public class CDObserver: NSObject {
+open class CDObserver: NSObject {
     let context: NSManagedObjectContext
     let request: NSFetchRequest<NSFetchRequestResult>
     public var callback: CDCallback?
