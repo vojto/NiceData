@@ -25,7 +25,7 @@ open class ReactiveObserver<T: NSManagedObject>: CDObserver {
 
 open class CDObserver: NSObject {
     let context: NSManagedObjectContext
-    public var request: NSFetchRequest<NSFetchRequestResult> {
+    public var request: NSFetchRequest<NSFetchRequestResult>? {
         didSet {
             fetch()
         }
@@ -40,7 +40,7 @@ open class CDObserver: NSObject {
         case none
     }
     
-    public init(context: NSManagedObjectContext, request: NSFetchRequest<NSFetchRequestResult>, includeChanges: Columns = .all, callback: CDCallback? = nil) {
+    public init(context: NSManagedObjectContext, request: NSFetchRequest<NSFetchRequestResult>?, includeChanges: Columns = .all, callback: CDCallback? = nil) {
         self.context = context
         self.request = request
         self.callback = callback
@@ -55,6 +55,8 @@ open class CDObserver: NSObject {
     }
     
     public func fetch() {
+        guard let request = self.request else { return }
+        
         do {
             let results = try context.fetch(request) as! [NSManagedObject]
             self.results = results
@@ -67,6 +69,8 @@ open class CDObserver: NSObject {
     public var onObjectsChanged: (([NSManagedObject]) -> ())?
     
     func handleObjectsChanged(notification: NSNotification) {
+        guard let request = self.request else { return }
+        
         let changedObjects = CDObserver.changedObjects(forNotification: notification, includeChanges: self.includeChanges)
         var changedEntities = Set<String>()
         
