@@ -25,7 +25,11 @@ open class ReactiveObserver<T: NSManagedObject>: CDObserver {
 
 open class CDObserver: NSObject {
     let context: NSManagedObjectContext
-    let request: NSFetchRequest<NSFetchRequestResult>
+    public var request: NSFetchRequest<NSFetchRequestResult> {
+        didSet {
+            fetch()
+        }
+    }
     public var callback: CDCallback?
     var includeChanges: Columns
     dynamic var results = [NSManagedObject]()
